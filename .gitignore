@@ -1,0 +1,58 @@
+# Git 忽略文件
+
+# ========== Python ==========
+# 虚拟环境
+.venv/
+venv/
+ENV/
+env/
+
+# 字节码
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# 分发/打包
+dist/
+build/
+*.egg-info/
+*.egg
+
+# uv
+.python-version
+uv.lock
+
+# ========== 日志和缓存 ==========
+logs/*.log
+*.log
+.cache/
+.pytest_cache/
+.ruff_cache/
+
+# ========== 环境变量 ==========
+.env
+.env.*
+!.env.example
+
+# ========== 系统文件 ==========
+.DS_Store
+Thumbs.db
+Desktop.ini
+*~
+
+# ========== 编辑器/IDE ==========
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-*
+
+# ========== Node.js (MCP 服务器) ==========
+node_modules/
+package-lock.json
+
+# ========== 临时文件 ==========
+*.tmp
+*.temp
+*.bak

@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "mkdir -p logs && echo \"[$(date '+%Y-%m-%d %H:%M:%S')] SESSION START\" >> logs/session.log",
+        "powershell": "if (-not (Test-Path logs)) { New-Item -ItemType Directory -Path logs -Force | Out-Null }; Add-Content -Path logs/session.log -Value \"[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] SESSION START\" -Encoding UTF8",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] SESSION END\" >> logs/session.log",
+        "powershell": "Add-Content -Path logs/session.log -Value \"[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] SESSION END\" -Encoding UTF8",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": "./scripts/log-prompt.sh",
+        "powershell": "./scripts/log-prompt.ps1",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "./scripts/pre-tool-check.sh",
+        "powershell": "./scripts/pre-tool-check.ps1",
+        "cwd": ".",
+        "timeoutSec": 10
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "./scripts/post-tool-log.sh",
+        "powershell": "./scripts/post-tool-log.ps1",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}
