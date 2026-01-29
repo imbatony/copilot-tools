@@ -140,17 +140,38 @@ description: 技能描述，说明何时使用此技能
 
 ### 配置 MCP 服务器
 
+MCP (Model Context Protocol) 服务器为 Copilot 提供额外的数据源和工具能力。
+
 1. 复制配置示例:
    ```bash
    cp config/mcp-config.example.json ~/.copilot/mcp-config.json
    ```
 
-2. 编辑配置文件，设置所需的 MCP 服务器
+2. 编辑配置文件，例如添加 Blinko 笔记服务:
+   ```json
+   {
+     "mcpServers": {
+       "blinko": {
+         "command": "npx",
+         "args": ["-y", "mcp-server-blinko@0.0.9"],
+         "env": {
+           "BLINKO_DOMAIN": "http://your-blinko-server:1111",
+           "BLINKO_API_KEY": "${BLINKO_TOKEN}"
+         },
+         "tools": ["*"]
+       }
+     }
+   }
+   ```
+
+   > **注意**: `tools: ["*"]` 表示启用所有工具，`tools: []` 会禁用所有工具。
 
 3. 或者在 Copilot CLI 中使用:
    ```
    /mcp add
    ```
+
+详细配置说明参见 [mcp.instructions.md](.github/instructions/mcp.instructions.md)。
 
 ### 配置 Hooks
 
