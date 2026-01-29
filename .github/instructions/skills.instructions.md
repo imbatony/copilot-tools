@@ -37,6 +37,23 @@ allowed-tools: Bash(uv:*) Read
 ---
 ```
 
+## allowed-tools 配置说明
+
+`allowed-tools` 用于预授权工具，跳过执行确认。
+
+```yaml
+# Shell 命令使用 Bash() 包装
+allowed-tools: Bash(uv:*) Bash(python:*) Read
+
+# MCP 工具使用实际工具名称（通过 /mcp show <server> 查看）
+allowed-tools: upsertBlinko searchBlinko deleteBlinko
+
+# 组合使用
+allowed-tools: Bash(git:*) Read upsertBlinko searchBlinko
+```
+
+> **注意**: MCP 工具不支持通配符如 `mcp_*`，必须使用实际工具名称。
+
 ## name 字段规则
 
 - 1-64 字符

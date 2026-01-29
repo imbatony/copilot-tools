@@ -11,7 +11,19 @@ MCP 服务器为 Copilot 提供额外的数据源和工具能力。
 - 用户级配置: `~/.copilot/mcp-config.json`
 - 可通过环境变量 `XDG_CONFIG_HOME` 更改位置
 
+## 服务器类型
+
+MCP 服务器支持两种连接类型：
+
+| 类型 | 说明 | 适用场景 |
+|------|------|----------|
+| **stdio** | 本地进程，通过标准输入输出通信 | 本地命令行工具 |
+| **sse** | 远程服务器，通过 Server-Sent Events 通信 | 远程 API 服务 |
+| **http** | 远程服务器，通过 HTTP 通信 | 远程 API 服务 |
+
 ## 配置格式
+
+### stdio 类型（本地进程）
 
 ```json
 {
@@ -22,6 +34,7 @@ MCP 服务器为 Copilot 提供额外的数据源和工具能力。
       "env": {
         "ENV_VAR": "value"
       },
+      "tools": ["*"],
       "disabled": false,
       "alwaysAllow": ["tool-name"]
     }
@@ -29,15 +42,49 @@ MCP 服务器为 Copilot 提供额外的数据源和工具能力。
 }
 ```
 
+### sse/http 类型（远程服务器）
+
+```json
+{
+  "mcpServers": {
+    "server-name": {
+      "type": "sse",
+      "url": "https://example.com/sse",
+      "headers": {
+        "Authorization": "Bearer ${API_TOKEN}"
+      },
+      "tools": ["*"],
+      "disabled": false
+    }
+  }
+}
+```
+
 ## 字段说明
 
-| 字段 | 说明 |
-|------|------|
-| `command` | 启动 MCP 服务器的命令 |
-| `args` | 命令参数数组 |
-| `env` | 环境变量 |
-| `disabled` | 是否禁用此服务器 |
-| `alwaysAllow` | 自动允许的工具列表 |
+### 通用字段
+
+| 字段 | 必需 | 说明 |
+|------|------|------|
+| `tools` | ✓ | 工具列表，`["*"]` 表示启用所有工具，`[]` 禁用所有工具 |
+| `disabled` | ✗ | 是否禁用此服务器 |
+| `alwaysAllow` | ✗ | 自动允许的工具列表 |
+
+### stdio 类型专用字段
+
+| 字段 | 必需 | 说明 |
+|------|------|------|
+| `command` | ✓ | 启动 MCP 服务器的命令 |
+| `args` | ✓ | 命令参数数组 |
+| `env` | ✗ | 环境变量 |
+
+### sse/http 类型专用字段
+
+| 字段 | 必需 | 说明 |
+|------|------|------|
+| `type` | ✓ | 服务器类型：`"sse"` 或 `"http"` |
+| `url` | ✓ | 服务器 URL |
+| `headers` | ✗ | HTTP 请求头（用于认证等） |
 
 ## 常用 MCP 服务器
 
@@ -50,7 +97,8 @@ MCP 服务器为 Copilot 提供额外的数据源和工具能力。
     "args": ["-y", "@modelcontextprotocol/server-github"],
     "env": {
       "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-    }
+    },
+    "tools": ["*"]
   }
 }
 ```
@@ -61,10 +109,53 @@ MCP 服务器为 Copilot 提供额外的数据源和工具能力。
 {
   "filesystem": {
     "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
+    "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+    "tools": ["*"]
   }
 }
 ```
+
+### 远程 SSE 服务器
+
+```json
+{
+  "remote-api": {
+    "type": "sse",
+    "url": "https://api.example.com/mcp/sse",
+    "headers": {
+      "Authorization": "Bearer ${API_TOKEN}"
+    },
+    "tools": ["*"]
+  }
+}
+```
+
+### Blinko 笔记服务
+
+参考: [mcp-server-blinko](https://github.com/BryceWG/mcp-server-blinko)
+
+```json
+{
+  "blinko": {
+    "command": "npx",
+    "args": ["-y", "mcp-server-blinko@0.0.9"],
+    "env": {
+      "BLINKO_DOMAIN": "http://your-blinko-server:1111",
+      "BLINKO_API_KEY": "${BLINKO_TOKEN}"
+    },
+    "tools": ["*"]
+  }
+}
+```
+
+**支持的工具:**
+- `upsert_blinko_flash_note` - 创建闪念
+- `upsert_blinko_note` - 创建笔记
+- `upsert_blinko_todo` - 创建待办事项
+- `search_blinko_notes` - 搜索笔记
+- `share_blinko_note` - 分享笔记
+- `review_blinko_daily_notes` - 获取今日回顾
+- `clear_blinko_recycle_bin` - 清空回收站
 
 ## 添加 MCP 服务器
 
