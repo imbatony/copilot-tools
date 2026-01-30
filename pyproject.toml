@@ -17,6 +17,10 @@ dev = [
     "pytest>=7.0",
     "ruff>=0.1.0",
 ]
+video = [
+    "yt-dlp>=2024.0.0",
+    "openai-whisper>=20231117",
+]
 
 [project.scripts]
 weather = "scripts.weather:main"

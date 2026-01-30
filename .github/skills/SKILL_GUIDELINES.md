@@ -1,6 +1,30 @@
 # Agent Skills 编写指南
 
-本文档基于 [Agent Skills 官方规范](https://agentskills.io/specification)，用于指导新 Skill 的编写。
+本文档基于 [GitHub Copilot Agent Skills 官方文档](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) 和 [Agent Skills 规范](https://agentskills.io/specification)，用于指导新 Skill 的编写。
+
+> **💡 推荐做法：** 在创建新技能时，请优先使用 **skill-creator** 技能来辅助创建。只需向 Copilot 描述你想要的技能功能，skill-creator 会引导你完成整个创建流程，确保符合规范要求。
+
+## 官方规范要点
+
+根据 GitHub 官方文档，技能需要满足以下要求：
+
+### 存储位置
+
+- **项目技能**：存储在仓库的 `.github/skills` 或 `.claude/skills` 目录下
+- **个人技能**：存储在用户主目录的 `~/.copilot/skills` 或 `~/.claude/skills` 目录下
+
+### 必需元素
+
+1. **SKILL.md 文件**（必需）：技能定义文件，必须命名为 `SKILL.md`
+2. **YAML frontmatter**（必需）：包含 `name` 和 `description` 字段
+3. **Markdown 正文**（必需）：技能的详细指令、示例和指南
+
+### 支持的工具
+
+Agent Skills 是一个开放标准，支持：
+- GitHub Copilot (Coding Agent、CLI、VS Code Insiders)
+- Claude (Claude Code)
+- 其他兼容 Agent Skills 规范的工具
 
 ## 目录结构
 
@@ -208,7 +232,26 @@ npx skills-ref validate ./my-skill
 
 ## 示例：创建新 Skill
 
-1. 创建目录：
+> **推荐方式：** 使用 skill-creator 技能创建新技能，只需告诉 Copilot 你想要创建什么技能即可。
+
+### 使用 skill-creator（推荐）
+
+直接向 Copilot 描述你的需求：
+
+```
+我想创建一个用于查询天气的技能
+```
+
+skill-creator 会：
+1. 通过具体示例理解你的需求
+2. 规划可重用的技能内容
+3. 初始化技能目录结构
+4. 编辑和完善技能内容
+5. 验证并打包技能
+
+### 手动创建
+
+如需手动创建，按以下步骤操作：
    ```bash
    mkdir -p .github/skills/my-skill/{scripts,references}
    ```
@@ -241,6 +284,8 @@ npx skills-ref validate ./my-skill
 
 ## 参考链接
 
+- [GitHub Copilot Agent Skills 官方文档](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
 - [Agent Skills 官方规范](https://agentskills.io/specification)
 - [Agent Skills 介绍](https://agentskills.io/what-are-skills)
-- [GitHub Copilot CLI 文档](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+- [Anthropic Skills 仓库](https://github.com/anthropics/skills)
+- [Awesome Copilot 社区集合](https://github.com/github/awesome-copilot)
